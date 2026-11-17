@@ -1,0 +1,15 @@
+# Enable once a GitHub App with Content/PR write access is configured.
+name: Sync central APM guidance
+on:
+  schedule:
+    - cron: '23 4 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sync:
+    uses: Omermigdal/apm/.github/workflows/sync-consumer.yml@003f5bd5270d6bf407de6335cbe8712e491ae7e3
+    with:
+      app-client-id: ${{ vars.APM_AUTOMATION_APP_CLIENT_ID }}
+    secrets:
+      app-private-key: ${{ secrets.APM_AUTOMATION_APP_PRIVATE_KEY }}
