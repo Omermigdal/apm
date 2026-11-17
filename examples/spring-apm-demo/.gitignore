@@ -1,0 +1,5 @@
+target/
+.idea/
+*.iml
+apm_modules/
+# Keep apm.lock.yaml and installed agent guidance in real consumer repositories.

@@ -1,0 +1,8 @@
+name: spring-apm-demo
+version: 0.1.0
+description: Standalone Spring Boot app consuming a SHA-pinned agent package.
+targets:
+  - copilot
+dependencies:
+  apm:
+    - Omermigdal/apm#003f5bd5270d6bf407de6335cbe8712e491ae7e3

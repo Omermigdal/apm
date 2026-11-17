@@ -1,0 +1,54 @@
+name: Validate Spring APM consumer example
+on:
+  pull_request:
+    paths:
+      - 'examples/spring-apm-demo/**'
+      - '.github/workflows/validate-consumer-demo.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'examples/spring-apm-demo/**'
+      - '.github/workflows/validate-consumer-demo.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    name: Maven test on Java 25
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@c5195efecf7bdfc987ee8bae7a71cb8b11521c00 # v4.7.1
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: maven
+          cache-dependency-path: examples/spring-apm-demo/pom.xml
+      - run: mvn -B -q -f examples/spring-apm-demo/pom.xml test
+  consume-apm:
+    name: Install and audit registry
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: examples/spring-apm-demo
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: microsoft/apm-action@d723bb64ed70c135bbaf87d126b721dd2dae0439 # v1
+        with:
+          apm-version: '0.35.0'
+          setup-only: true
+      - name: Install pinned registry and audit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apm install --target copilot --only apm --no-trust-bin
+          apm audit --ci
+          test -s apm.lock.yaml
+          test -s .github/instructions/java.instructions.md
+          test -s .github/instructions/spring.instructions.md
+          test -s .agents/skills/spring-development/SKILL.md
