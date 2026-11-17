@@ -1,6 +1,6 @@
 # Omer APM — Java & Spring guidance registry
 
-A single, versioned source of GitHub Copilot instructions and Agent Skills for Java/Spring repositories. [TRACEABILITY.md](TRACEABILITY.md) preserves the decisions behind this guidance.
+A single, versioned source of GitHub Copilot instructions and Agent Skills for Java/Spring repositories.
 
 ## Contents
 
