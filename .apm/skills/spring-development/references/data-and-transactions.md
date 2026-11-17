@@ -1,0 +1,10 @@
+# Data and transactions
+
+- Use the existing persistence technologies and transaction managers. Bind query parameters and validate untrusted data; do not concatenate it into SQL, query languages, or filesystem paths.
+- Use projections, indexes, pagination, batching, or streaming when justified by the workload and compatible with contracts. Check for N+1 queries and unbounded reads. Assess migrations, rollback, and operational impact before changing schemas or indexes.
+- For MongoDB, use the project's repositories for straightforward access and templates for appropriate advanced queries. Design indexes, including compound indexes, and documents for actual query patterns; use TTL indexes only with an explicit retention policy.
+- For relational databases, including Oracle, use the project's JPA, JDBC, MyBatis, or SQL facilities as appropriate. Consider projections, fetch joins, or entity graphs where they address measured access patterns. Keep distinct persistence responsibilities clear.
+- Choose transaction boundaries based on consistency requirements and the configured transaction manager. Consider read-only transactions where useful. Account for proxy behavior; do not assume different stores share an atomic transaction.
+- Select cross-system consistency strategies according to failure and recovery requirements. An outbox, compensating action, or retry may be appropriate, but is not a universal default.
+- Respect HTTP method semantics. For operations requiring duplicate protection, use an appropriate idempotency strategy and ensure the guard and side effect have suitable atomicity, concurrency handling, and recovery. Follow the Java test rules for guard coverage.
+- For shared API, record, interface, enum, or schema changes, assess consumer compatibility. Verify affected consumers when authorized; report any checks that cannot be performed.

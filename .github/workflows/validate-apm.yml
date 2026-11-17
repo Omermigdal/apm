@@ -1,0 +1,38 @@
+name: Validate APM registry
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    name: Validate instructions and deployed skill
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout registry
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Install pinned APM CLI
+        uses: microsoft/apm-action@d723bb64ed70c135bbaf87d126b721dd2dae0439 # v1
+        with:
+          apm-version: '0.35.0'
+          setup-only: true
+      - name: Validate authoring format
+        run: apm compile --validate
+      - name: Materialize package locally
+        run: apm install --only apm --target copilot --no-trust-bin
+      - name: Verify installed content and lockfile
+        run: |
+          set -euo pipefail
+          test -s .github/instructions/project-workflow.instructions.md
+          test -s .github/instructions/java.instructions.md
+          test -s .github/instructions/spring.instructions.md
+          test -s .agents/skills/spring-development/SKILL.md
+          test -s .agents/skills/spring-development/references/web-api.md
+          test -s .agents/skills/spring-development/references/data-and-transactions.md
+          test -s .agents/skills/spring-development/references/reliability.md
+          test -s apm.lock.yaml
+          apm audit --ci

@@ -1,21 +1,52 @@
-# Reusable Java and Spring agent guidance
+# Omer APM — Java & Spring guidance registry
 
-This bundle consolidates the supplied Java and Spring guidance and the user's recorded decisions. It contains no application-specific paths, APIs, or business-domain assumptions.
-
-## Installation
-
-Copy the contents of `.github/` into a repository, merging with existing instructions and skills rather than overwriting them. Review and remove or reconcile conflicting legacy instructions.
-
-The target is Java 25 and Spring Boot 4.1.2, pinned until deliberately updated. Spring Boot's published system requirements list Java 25 as compatible. Do not silently migrate an existing project or add required dependencies without authorization. Review the conventions before sharing with a team.
+A single, versioned source of GitHub Copilot instructions and Agent Skills for Java/Spring repositories. [TRACEABILITY.md](TRACEABILITY.md) preserves the decisions behind this guidance.
 
 ## Contents
 
-- `.github/copilot-instructions.md`: repository-wide workflow.
-- `.github/instructions/java.instructions.md`: Java and test conventions.
-- `.github/instructions/spring.instructions.md`: essential Spring rules and review rubric.
-- `.github/skills/spring-development/SKILL.md`: on-demand workflow and three focused references.
-- `TRACEABILITY.md`: source coverage and deliberately changed or excluded guidance.
+| Source (in this registry) | Consumer output (`--target copilot`) | Use |
+| --- | --- | --- |
+| `.apm/instructions/project-workflow.instructions.md` | `.github/instructions/project-workflow.instructions.md` | Cross-cutting change discipline |
+| `.apm/instructions/java.instructions.md` | `.github/instructions/java.instructions.md` | Java 25 implementation/tests |
+| `.apm/instructions/spring.instructions.md` | `.github/instructions/spring.instructions.md` | Spring Boot 4.1.2 conventions |
+| `.apm/skills/spring-development/` | `.agents/skills/spring-development/` | On-demand Spring workflow and 3 references |
 
-Client support and skill activation vary. Confirm that your client discovers the instructions and skill. The documents are guidance, not a guarantee of agent behavior.
+**Ownership:** Only `.apm/` is the source of installable guidance in this repository. Consumers commit the generated directories and `apm.lock.yaml`; they must not maintain parallel handwritten copies of these files.
 
-References: [Spring Boot system requirements](https://docs.spring.io/spring-boot/system-requirements.html), [Spring Boot JSON](https://docs.spring.io/spring-boot/reference/features/json.html), [Copilot custom instructions](https://docs.github.com/en/copilot/concepts/prompting-and-context/custom-instructions), and [Agent Skills](https://agentskills.io/specification).
+**Versions:** Java 25 and Spring Boot 4.1.2 are current project guidance, not a command to migrate existing applications. Spring guidance deliberately requires compatibility review and explicit authorization before an unrelated dependency or infrastructure change.
+
+## Install in a consumer
+
+Install the [Microsoft APM CLI](https://github.com/microsoft/apm) (the reusable workflows pin `apm-cli` to `0.35.0`), then in the consumer repository:
+
+```bash
+apm install Omermigdal/apm#v1.0.0 --target copilot --no-trust-bin
+apm audit --ci
+```
+
+The `v1.0.0` tag must be created **after** the initial registry checks pass; until then use a reviewed exact registry commit SHA instead of the tag. Commit `apm.yml`, `apm.lock.yaml`, and deployed `.github/instructions/` and `.agents/skills/` files. Check the diff and reconcile any existing Copilot instructions before adopting. APM can skip edited/colliding files instead of silently overwriting them.
+
+For reproducible downstream installs, keep `targets: [copilot]` in the consumer manifest; don't depend on machine-specific auto-detection. Confirm your Copilot client discovers `.github/instructions/*.instructions.md` and `.agents/skills/`.
+
+## Updating consumers
+
+The recommended update model is **consumer pull, not registry push**:
+
+1. Maintain one versioned registry, with reviewed changes to `.apm/` and GitHub releases/tags.
+2. In each consumer, call [the reusable `sync-consumer.yml` workflow](.github/workflows/sync-consumer.yml) on a schedule or manual dispatch. It runs `apm update Omermigdal/apm --yes` (first-party dependency only), verifies the deployment with `apm audit --ci`, and opens/updates a PR containing the regenerated lockfile and files.
+3. The workflow **requires a GitHub App installation token** (Contents and Pull requests write) so the PR's normal CI will run. It intentionally does not fall back to `GITHUB_TOKEN` and silently create untested PRs.
+4. Require the consumer's APM audit and application tests as branch checks. Review agent-text changes before merge, particularly external sources. Auto-merge only for your reviewed first-party package if your policies allow it.
+
+The repository includes [an example caller](examples/sync-caller.yml.example). Keep its `uses:` ref on an immutable tag or SHA; replace the placeholder with a published tag. The production sync job is not activated simply by creating this registry.
+
+## Registry validation
+
+CI in [validate-apm.yml](.github/workflows/validate-apm.yml) pins the APM CLI, verifies primitive structure, installs to the Copilot target, and audits its output. It does not change committed files. To validate locally:
+
+```bash
+apm compile --validate
+apm install --target copilot --only apm --no-trust-bin
+apm audit --ci
+```
+
+Version changes require a deliberate edit to `apm.yml` and a matching Git tag after validation. No production repositories are touched automatically by this producer.

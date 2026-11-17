@@ -1,0 +1,5 @@
+# APM local dependency cache; lockfile and deployed files belong in consumer repos.
+apm_modules/
+.apm-cache/
+__pycache__/
+*.pyc
