@@ -1,0 +1,17 @@
+# Save this as .github/workflows/apm-sync.yml inside EACH consumer, after
+# publishing a checked registry tag and installing a GitHub App with:
+#   Contents: Read & write; Pull requests: Read & write.
+name: Sync central APM rules
+on:
+  schedule:
+    - cron: '23 4 * * 1'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sync:
+    uses: Omermigdal/apm/.github/workflows/sync-consumer.yml@v1.0.0
+    with:
+      app-client-id: ${{ vars.APM_AUTOMATION_APP_CLIENT_ID }}
+    secrets:
+      app-private-key: ${{ secrets.APM_AUTOMATION_APP_PRIVATE_KEY }}

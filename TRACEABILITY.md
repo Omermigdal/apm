@@ -89,3 +89,7 @@ The user also selected constructor injection with `@RequiredArgsConstructor`, th
 ## Operational boundaries
 
 Requiring Jackson 3, Lombok, or observability may conflict with an existing project's dependencies. The bundle directs agents to report the gap and seek authorization before introducing dependencies or migrations; it does not pretend those requirements have been met. Existing APIs and configuration are not silently migrated.
+
+## APM source layout
+
+The destination key describes the installed Copilot consumer paths. The authoritative, source-controlled files in this producer repository live under `.apm/instructions/` and `.apm/skills/`. APM deploys them to the corresponding `.github/instructions/` and `.agents/skills/` consumer directories.
