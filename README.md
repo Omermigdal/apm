@@ -8,12 +8,12 @@ A single, versioned source of GitHub Copilot instructions and Agent Skills for J
 | --- | --- | --- |
 | `.apm/instructions/project-workflow.instructions.md` | `.github/instructions/project-workflow.instructions.md` | Cross-cutting change discipline |
 | `.apm/instructions/java.instructions.md` | `.github/instructions/java.instructions.md` | Java 25 implementation/tests |
-| `.apm/instructions/spring.instructions.md` | `.github/instructions/spring.instructions.md` | Spring Boot 4.1.2 conventions |
+| `.apm/instructions/spring.instructions.md` | `.github/instructions/spring.instructions.md` | Spring Boot 4.x conventions |
 | `.apm/skills/spring-development/` | `.agents/skills/spring-development/` | On-demand Spring workflow and 3 references |
 
 **Ownership:** Only `.apm/` is the source of installable guidance in this repository. Consumers commit the generated directories and `apm.lock.yaml`; they must not maintain parallel handwritten copies of these files.
 
-**Versions:** Java 25 and Spring Boot 4.1.2 are current project guidance, not a command to migrate existing applications. Spring guidance deliberately requires compatibility review and explicit authorization before an unrelated dependency or infrastructure change.
+**Versions.** The guidance covers Java 25 and Spring Boot 4.x. In consumer projects, follow the configured Spring Boot minor and patch versions. Check the matching release documentation before using an API, starter, or configuration property. Framework upgrades and infrastructure changes require explicit authorization.
 
 ## Install in a consumer
 
