@@ -1,6 +1,6 @@
 name: omer-java-spring
 version: 1.0.0
-description: Reusable Java 25 and Spring Boot 4.1.2 agent instructions and skills.
+description: Reusable Java 25 and Spring Boot 4.x agent instructions and skills.
 author: Omermigdal
 targets:
   - copilot

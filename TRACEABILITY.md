@@ -81,7 +81,7 @@ These are the selections from the decision sheet, including free-form clarificat
 32. Recommend CI/security checks only with project and user authorization.
 33. Require feature-oriented packaging and interfaces for major boundaries.
 34. Require a Green/Yellow/Red rubric for every Spring task or review.
-35. Pin Spring Boot 4.1.2 until intentionally updated.
+35. Originally pin Spring Boot 4.1.2. The current guidance covers Spring Boot 4.x and follows each consumer project's configured minor and patch versions.
 36. Use relevant skills only when available; keep essential rules in instructions.
 
 The user also selected constructor injection with `@RequiredArgsConstructor`, the listed Lombok restrictions, JUnit 5/Mockito/AssertJ, camelCase `given...When...Then...` names, test helpers after tests, deterministic async synchronization, authorized focused validation, no per-task static-analysis setup prompt, project logging style, YAML for new projects or requested migrations, project property namespaces, contract-driven enum lookup and date/time types, and context-sensitive modern Java idioms.
